@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id            BigInt         @id @default(autoincrement())
+  name          String?        @db.VarChar(15)
+  kind          String?        @default("food") @db.VarChar(15)
+  MemberPrefers MemberPrefer[]
+
+  @@map("food_category")
+}
+
+model Member {
+  id             BigInt          @id @default(autoincrement())
+  name           String?         @db.VarChar(20)
+  gender         String?         @db.VarChar(10)
+  age            Int?            @db.Int
+  address        String?         @db.VarChar(40)
+  specAddress    String?         @map("spec_address") @db.VarChar(40)
+  phoneNum       String?         @map("phone_num") @db.VarChar(13)
+  status         String?         @db.VarChar(15)
+  inactiveDate   DateTime?       @default(now()) @map("inactive_date") @db.DateTime(6)
+  socialType     String?         @default("") @map("social_type") @db.VarChar(10)
+  createdAt      DateTime?       @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt      DateTime?       @default(now()) @map("updated_at") @db.DateTime(6)
+  email          String?         @unique(map: "email") @db.VarChar(50)
+  point          Int?            @db.Int
+  MemberAgrees   MemberAgree[]
+  MemberMissions MemberMission[]
+  MemberPrefers  MemberPrefer[]
+  Reviews        Review[]
+
+  @@map("member")
+}
+
+model MemberAgree {
+  id        BigInt    @id @default(autoincrement())
+  member    Member    @relation(fields: [memberId], references: [id])
+  memberId  BigInt    @map("member_id")
+  terms     Terms     @relation(fields: [termsId], references: [id])
+  termsId   BigInt    @map("terms_id")
+  createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  @@index([memberId], map: "member_id")
+  @@index([termsId], map: "terms_id")
+  @@map("member_agree")
+}
+
+model MemberMission {
+  id        BigInt    @id @default(autoincrement())
+  member    Member    @relation(fields: [memberId], references: [id])
+  memberId  BigInt    @map("member_id")
+  mission   Mission   @relation(fields: [missionId], references: [id])
+  missionId BigInt    @map("mission_id")
+  status    String?   @db.VarChar(15)
+  createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  @@index([memberId], map: "member_id")
+  @@index([missionId], map: "mission_id")
+  @@map("member_mission")
+}
+
+model MemberPrefer {
+  id         BigInt    @id @default(autoincrement())
+  member     Member    @relation(fields: [memberId], references: [id])
+  memberId   BigInt    @map("member_id")
+  category   Category  @relation(fields: [categoryId], references: [id])
+  categoryId BigInt    @map("category_id")
+  createdAt  DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt  DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  @@index([categoryId], map: "category_id")
+  @@index([memberId], map: "member_id")
+  @@map("member_prefer")
+}
+
+model Mission {
+  id          BigInt    @id @default(autoincrement())
+  store       Store     @relation(fields: [storeId], references: [id])
+  storeId     BigInt    @map("store_id")
+  reward      Int?
+  deadline    DateTime? @db.DateTime()
+  missionSpec String?   @map("mission_spec") @db.Text
+  createdAt   DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt   DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  MemberMissions MemberMission[]
+
+  @@index([storeId], map: "store_id")
+  @@map("mission")
+}
+
+model Region {
+  id        BigInt    @id @default(autoincrement())
+  name      String?   @db.VarChar(20)
+  createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  Stores Store[]
+
+  @@map("region")
+}
+
+model Review {
+  id        BigInt    @id @default(autoincrement())
+  member    Member    @relation(fields: [memberId], references: [id])
+  memberId  BigInt    @map("member_id")
+  store     Store     @relation(fields: [storeId], references: [id])
+  storeId   BigInt    @map("store_id")
+  body      String?   @db.Text
+  score     Float?    @db.Float
+  createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  ReviewImages ReviewImage[]
+
+  @@index([memberId], map: "member_id")
+  @@index([storeId], map: "store_id")
+  @@map("review")
+}
+
+model ReviewImage {
+  id        BigInt    @id @default(autoincrement())
+  review    Review    @relation(fields: [reviewId], references: [id])
+  reviewId  BigInt    @map("review_id")
+  imageUrl  String?   @map("image_url") @db.Text
+  createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  @@index([reviewId], map: "review_id")
+  @@map("review_image")
+}
+
+model Store {
+  id        BigInt    @id @default(autoincrement())
+  region    Region    @relation(fields: [regionId], references: [id])
+  regionId  BigInt    @map("region_id")
+  name      String?   @db.VarChar(50)
+  address   String?   @db.VarChar(50)
+  score     Float?    @db.Float
+  createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  Missions Mission[]
+  Reviews  Review[]
+
+  @@index([regionId], map: "region_id")
+  @@map("store")
+}
+
+model Terms {
+  id        BigInt    @id @default(autoincrement())
+  title     String?   @db.VarChar(20)
+  body      String?   @db.Text
+  optional  Int?      @db.TinyInt
+  createdAt DateTime? @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime? @default(now()) @map("updated_at") @db.DateTime(6)
+
+  MemberAgrees MemberAgree[]
+
+  @@map("terms")
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.VarChar(512)
+  expiresAt DateTime @map("expires_at")
+
+  @@map("session")
+}
