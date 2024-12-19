@@ -155,7 +155,7 @@ app.get(
 app.get("/", (req, res) => {
 
     console.log(req.user);
-    res.send(req.user);
+    res.send("hello world", req.user);
 });
 
 //app.post("/api/v1/users/signup", handleUserSignUp);
