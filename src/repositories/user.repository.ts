@@ -2,7 +2,7 @@ import { prisma } from "../db.config.js";
 
 // 유저 회원가입
 // User 데이터 삽입
-export const addUser = async (data) => {
+export const addUser = async (data: any) => {
     const member = await prisma.member.findFirst({ where: { email: data.email } });
     if (member) {
         return { sameEmail: true };
@@ -14,13 +14,13 @@ export const addUser = async (data) => {
 
 
 // 사용자 정보 얻기
-export const getUser = async (memberId) => {
+export const getUser = async (memberId: number) => {
     const member = await prisma.member.findFirstOrThrow({ where: { id: memberId } });
     return member;
 };
 
 // 음식 선호 카테고리 매핑
-export const setPreference = async (memberId, categoryId) => {
+export const setPreference = async (memberId: number, categoryId: number) => {
     const category = await prisma.category.findFirst({ where: { id: categoryId } });
     if (!category) {
         return { idError: true }
@@ -34,14 +34,17 @@ export const setPreference = async (memberId, categoryId) => {
     return { idError: false }
 };
 
+
 // 사용자 선호 카테고리 반환
-export const getUserPreferencesByUserId = async (memberId) => {
+export const getUserPreferencesByUserId = async (memberId: number) => {
     const preferences = await prisma.memberPrefer.findMany({
         select: {
             id: true,
             memberId: true,
             categoryId: true,
             category: true,
+            createdAt: true,
+            updatedAt: true,
         },
         where: { memberId: memberId },
         orderBy: { categoryId: "asc" },
@@ -52,7 +55,7 @@ export const getUserPreferencesByUserId = async (memberId) => {
 
 // 유저 약관 동의
 // 약관 동의 매핑
-export const setUserAgree = async (user, termsId) => {
+export const setUserAgree = async (user: any, termsId: number) => {
     const terms = await prisma.terms.findFirst({ where: { id: termsId } });
     if (!terms) {
         return null;
@@ -66,13 +69,13 @@ export const setUserAgree = async (user, termsId) => {
 };
 
 // 약관 동의 반환
-export const getUserAgree = async (memberId) => {
+export const getUserAgree = async (memberId: number) => {
     const memberAgree = await prisma.memberAgree.findFirstOrThrow({ where: { id: memberId } });
     return memberAgree;
 };
 
 // 내가 작성한 리뷰 목록 불러오기
-export const getAllUserReviews = async (memberId, cursor) => {
+export const getAllUserReviews = async (memberId: number, cursor: number) => {
     const reviews = await prisma.review.findMany({
         select: {
             id: true,
@@ -94,7 +97,7 @@ export const getAllUserReviews = async (memberId, cursor) => {
 };
 
 // 내가 진행 중인 미션 목록 불러오기
-export const getAllUserMissions = async (memberId, status, cursor) => {
+export const getAllUserMissions = async (memberId: number, status: string, cursor: number) => {
     const missions = await prisma.memberMission.findMany({
         select: {
             id: true,
@@ -103,6 +106,8 @@ export const getAllUserMissions = async (memberId, status, cursor) => {
             mission: true,
             missionId: true,
             status: true,
+            createdAt: true,
+            updatedAt: true,
         },
         where: { memberId: memberId, status: status, id: { gt: cursor } },
         orderBy: { id: "asc" },
@@ -116,7 +121,7 @@ export const getAllUserMissions = async (memberId, status, cursor) => {
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기
 // 유저미션id 반환
-export const getMemberMissionId = async (memberId, missionId, status) => {
+export const getMemberMissionId = async (memberId: number, missionId: number, status: string) => {
     const memberMission = await prisma.memberMission.findFirst({
         where: {
             memberId: memberId,
@@ -133,7 +138,7 @@ export const getMemberMissionId = async (memberId, missionId, status) => {
     return memberMission.id;
 }
 // 진행완료로 변경
-export const patchUserMissionComplete = async (status, id) => {
+export const patchUserMissionComplete = async (status: string, id: number) => {
     const missionComplete = await prisma.memberMission.update({
         where: {
             id: id
@@ -145,7 +150,7 @@ export const patchUserMissionComplete = async (status, id) => {
     return missionComplete;
 }
 
-export const patchSocialUser = async (data) => {
+export const patchSocialUser = async (data: any) => {
     await prisma.member.update({
         where: {
             id: data.id

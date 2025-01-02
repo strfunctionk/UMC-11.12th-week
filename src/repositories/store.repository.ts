@@ -2,7 +2,7 @@ import { prisma } from "../db.config.js";
 
 // 가게 추가
 // 가게 데이터 삽입
-export const addStore = async (data) => {
+export const addStore = async (data: any) => {
     const region = await prisma.region.findFirst({ where: { id: data.regionId } });
     if (!region) {
         return null;
@@ -12,20 +12,20 @@ export const addStore = async (data) => {
 };
 
 // 가게 정보 얻기
-export const getStore = async (storeId) => {
+export const getStore = async (storeId: number) => {
     const store = await prisma.store.findFirstOrThrow({ where: { id: storeId } });
     return store;
 };
 
 // 가게 지역 반환
-export const getRegionByRegionId = async (regionId) => {
+export const getRegionByRegionId = async (regionId: number) => {
     const region = await prisma.region.findFirstOrThrow({ where: { id: regionId } });
     return region;
 };
 
 // 가게 리뷰 추가
 // 리뷰 데이터 삽입
-export const addStoreReview = async (data) => {
+export const addStoreReview = async (data: any) => {
     const store = await prisma.store.findFirst({ where: { id: data.storeId } });
     if (!store) {
         return { idError: true };
@@ -35,13 +35,13 @@ export const addStoreReview = async (data) => {
 };
 
 // 리뷰 정보 얻기
-export const getStoreReview = async (reviewId) => {
+export const getStoreReview = async (reviewId: number) => {
     const review = await prisma.review.findFirstOrThrow({ where: { id: reviewId } });
     return review;
 };
 
 // 리뷰 이미지 매핑
-export const setStoreReviewImage = async (reviewId, imageUrl) => {
+export const setStoreReviewImage = async (reviewId: number, imageUrl: string) => {
     await prisma.reviewImage.create({
         data: {
             reviewId: reviewId,
@@ -51,13 +51,15 @@ export const setStoreReviewImage = async (reviewId, imageUrl) => {
 };
 
 // 리뷰 이미지 반환
-export const getStoreReviewImageByReviewId = async (reviewId) => {
+export const getStoreReviewImageByReviewId = async (reviewId: number) => {
     const reviewImages = await prisma.reviewImage.findMany({
         select: {
             id: true,
             reviewId: true,
             review: true,
-            imageUrl: true
+            imageUrl: true,
+            createdAt: true,
+            updatedAt: true
         },
         where: { reviewId: reviewId },
         orderBy: { reviewId: "asc" },
@@ -68,7 +70,7 @@ export const getStoreReviewImageByReviewId = async (reviewId) => {
 
 // 가게 미션 추가
 // 가게 미션 데이터 삽입
-export const addStoreMission = async (data) => {
+export const addStoreMission = async (data: any) => {
     const store = await prisma.store.findFirst({ where: { id: data.storeId } });
     if (!store) {
         return null;
@@ -78,14 +80,14 @@ export const addStoreMission = async (data) => {
 };
 
 // 가게 미션 정보 얻기
-export const getStoreMission = async (missionId) => {
+export const getStoreMission = async (missionId: number) => {
     const mission = await prisma.mission.findFirstOrThrow({ where: { id: missionId } });
     return mission;
 };
 
 // 가게 미션 도전 중인 미션에 추가
 // 가게 미션 도전 데이터 삽입
-export const addStoreMissionChallenge = async (data) => {
+export const addStoreMissionChallenge = async (data: any) => {
     const mission = await prisma.member.findFirst({ where: { id: data.missionId } });
     const memMission = await prisma.memberMission.findFirst({
         where: {
@@ -104,13 +106,13 @@ export const addStoreMissionChallenge = async (data) => {
 };
 
 // 가게 미션 도전 정보 얻기
-export const getStoreMissionChallenge = async (missionChallengeId) => {
+export const getStoreMissionChallenge = async (missionChallengeId: number) => {
     const memMission = await prisma.memberMission.findFirstOrThrow({ where: { id: missionChallengeId } });
     return memMission;
 };
 
 // 가게 리뷰 불러오기
-export const getAllStoreReviews = async (storeId, cursor) => {
+export const getAllStoreReviews = async (storeId: number, cursor: number) => {
     const reviews = await prisma.review.findMany({
         select: {
             id: true,
@@ -136,7 +138,7 @@ export const getAllStoreReviews = async (storeId, cursor) => {
 };
 
 // 가게 미션 불러오기
-export const getAllStoreMissions = async (storeId, cursor) => {
+export const getAllStoreMissions = async (storeId: number, cursor: number) => {
     const missions = await prisma.mission.findMany({
         select: {
             id: true,

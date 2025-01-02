@@ -1,9 +1,15 @@
+import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import { bodyToUser, bodyToUserAgree, bodyToMissionComplete, bodyToSocial } from "../dtos/user.dto.js";
 import { userSignUp, userAgreeAddition, listUserReviews, listUserMissions, CompleteUserMission, userSocialSignUp } from "../services/user.service.js";
 import { NotSocialError } from "../errors.js";
+import { Member } from "@prisma/client";
 // 유저 회원가입
-export const handleUserSignUp = async (req, res, next) => {
+export const handleUserSignUp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
   #swagger.summary = '회원 가입 API';
   #swagger.requestBody = {
@@ -107,7 +113,11 @@ export const handleUserSignUp = async (req, res, next) => {
 };
 
 // 유저 약관 동의
-export const handleUserAgreeAddition = async (req, res, next) => {
+export const handleUserAgreeAddition = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '유저 약관 동의 API';
 #swagger.requestBody = {
@@ -211,7 +221,11 @@ content: {
 };
 
 // 내가 작성한 리뷰 목록 불러오기
-export const handleListUserReviews = async (req, res, next) => {
+export const handleListUserReviews = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '내가 작성한 리뷰 목록 조회 API';
 #swagger.responses[200] = {
@@ -322,7 +336,7 @@ export const handleListUserReviews = async (req, res, next) => {
       throw new NotSocialError("소셜 로그인을 해주세요.", req.user)
     }
     const reviews = await listUserReviews(
-      parseInt(req.user.id),
+      req.user,
       typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
     res.status(StatusCodes.OK).success(reviews);
@@ -332,7 +346,11 @@ export const handleListUserReviews = async (req, res, next) => {
 };
 
 // 내가 진행 중인 미션 목록 불러오기
-export const handleListUserMissions = async (req, res, next) => {
+export const handleListUserMissions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '내가 진행 중인 미션 목록 조회 API';
 #swagger.responses[200] = {
@@ -441,8 +459,8 @@ export const handleListUserMissions = async (req, res, next) => {
       throw new NotSocialError("소셜 로그인을 해주세요.", req.user)
     }
     const missions = await listUserMissions(
-      parseInt(req.user.id),
-      req.query.status,
+      req.user,
+      JSON.stringify(req.query.status).replace(/\"/g, ''),
       typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
     res.status(StatusCodes.OK).success(missions);
@@ -452,7 +470,11 @@ export const handleListUserMissions = async (req, res, next) => {
 };
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기
-export const handleUserMissionComplete = async (req, res, next) => {
+export const handleUserMissionComplete = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '내가 진행 중인 미션을 진행 완료로 바꾸기 API';
  #swagger.requestBody = {
@@ -569,7 +591,7 @@ content: {
       throw new NotSocialError("소셜 로그인을 해주세요.", req.user)
     }
     const missions = await CompleteUserMission(bodyToMissionComplete(req.body),
-      parseInt(req.user.id),
+      req.user,
       parseInt(req.params.missionId)
     );
     res.status(StatusCodes.OK).success(missions);
@@ -578,7 +600,11 @@ content: {
   }
 };
 
-export const handleUserSocialSignUp = async (req, res, next) => {
+export const handleUserSocialSignUp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
   #swagger.summary = '소셜 회원 가입 API';
   #swagger.requestBody = {

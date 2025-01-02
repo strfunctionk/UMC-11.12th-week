@@ -28,8 +28,8 @@ import {
 } from "../repositories/store.repository.js";
 
 // 가게 추가
-export const storeAddition = async (data) => {
-    const storeId = await addStore({
+export const storeAddition = async (data: any) => {
+    const storeId: any = await addStore({
         regionId: data.regionId,
         name: data.name,
         address: data.address,
@@ -49,8 +49,8 @@ export const storeAddition = async (data) => {
 };
 
 // 가게 리뷰 추가
-export const storeReviewAddition = async (data) => {
-    const reviewId = await addStoreReview({
+export const storeReviewAddition = async (data: any) => {
+    const reviewId: any = await addStoreReview({
         memberId: data.user.id,
         storeId: data.storeId,
         body: data.body,
@@ -76,8 +76,8 @@ export const storeReviewAddition = async (data) => {
 };
 
 // 가게 미션 추가
-export const storeMissionAddition = async (data) => {
-    const missionId = await addStoreMission({
+export const storeMissionAddition = async (data: any) => {
+    const missionId: any = await addStoreMission({
         storeId: data.storeId,
         reward: data.reward,
         deadline: data.deadline,
@@ -95,8 +95,8 @@ export const storeMissionAddition = async (data) => {
 };
 
 // 가게 미션 도전 중인 미션에 추가
-export const storeMissionChallengeAddition = async (data) => {
-    const memMissionId = await addStoreMissionChallenge({
+export const storeMissionChallengeAddition = async (data: any) => {
+    const memMissionId: any = await addStoreMissionChallenge({
         memberId: data.user.id,
         missionId: data.missionId,
         status: data.status,
@@ -118,8 +118,8 @@ export const storeMissionChallengeAddition = async (data) => {
 };
 
 // 가게 리뷰 불러오기
-export const listStoreReviews = async (storeId, cursor) => {
-    const reviews = await getAllStoreReviews(storeId, cursor);
+export const listStoreReviews = async (storeId: number, cursor: number) => {
+    const reviews: any = await getAllStoreReviews(storeId, cursor);
     if (reviews.idError === true) {
         throw new NotExistId("가게 리뷰에 대한 정보를 불러올 수 없습니다.", storeId);
     }
@@ -130,8 +130,8 @@ export const listStoreReviews = async (storeId, cursor) => {
 };
 
 // 가게 미션 불러오기
-export const listStoreMissions = async (storeId, cursor) => {
-    const missions = await getAllStoreMissions(storeId, cursor);
+export const listStoreMissions = async (storeId: number, cursor: number) => {
+    const missions: any = await getAllStoreMissions(storeId, cursor);
     if (missions.idError === true) {
         throw new NotExistId("가게 미션에 대한 정보를 불러올 수 없습니다.", storeId);
     }

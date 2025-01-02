@@ -1,5 +1,6 @@
+import { Category, Member, MemberAgree, MemberMission, MemberPrefer, Mission, Region, Review, ReviewImage, Terms, Store } from "@prisma/client";
 // 가게 추가
-export const bodyToStore = (body) => {
+export const bodyToStore = (body: any) => {
 
     return {
         regionId: body.regionId,
@@ -9,7 +10,13 @@ export const bodyToStore = (body) => {
     };
 };
 
-export const responseFromStore = ({ store, region }) => {
+export const responseFromStore = ({
+    store,
+    region
+}: {
+    store: Store;
+    region: Region;
+}) => {
     return {
         name: store.name,
         address: store.address,
@@ -19,7 +26,7 @@ export const responseFromStore = ({ store, region }) => {
 };
 
 // 가게 리뷰 추가
-export const bodyToStoreReview = (user, body) => {
+export const bodyToStoreReview = (user: any, body: any) => {
 
     return {
         user: user,
@@ -30,7 +37,13 @@ export const bodyToStoreReview = (user, body) => {
     };
 };
 
-export const responseFromStoreReview = ({ review, reviewImages }) => {
+export const responseFromStoreReview = ({
+    review,
+    reviewImages
+}: {
+    review: Review;
+    reviewImages: ReviewImage[]
+}) => {
     const imageUrls = reviewImages.map(
         (image) => image.imageUrl
     );
@@ -42,7 +55,7 @@ export const responseFromStoreReview = ({ review, reviewImages }) => {
 };
 
 // 가게 미션 추가
-export const bodyToStoreMission = (body) => {
+export const bodyToStoreMission = (body: any) => {
     const deadline = new Date(body.deadline);
     return {
         storeId: body.storeId,
@@ -52,7 +65,11 @@ export const bodyToStoreMission = (body) => {
     };
 };
 
-export const responseFromStoreMission = ({ mission }) => {
+export const responseFromStoreMission = ({
+    mission
+}: {
+    mission: Mission
+}) => {
     return {
         reward: mission.reward,
         deadline: mission.deadline,
@@ -61,7 +78,7 @@ export const responseFromStoreMission = ({ mission }) => {
 };
 
 // 가게 미션 도전 중인 미션에 추가
-export const bodyToStoreMissionChallenge = (user, body) => {
+export const bodyToStoreMissionChallenge = (user: any, body: any) => {
     return {
         user: user,
         missionId: body.missionId,
@@ -69,14 +86,22 @@ export const bodyToStoreMissionChallenge = (user, body) => {
     };
 };
 
-export const responseFromStoreMissionChallenge = ({ missionChallenge }) => {
+export const responseFromStoreMissionChallenge = ({
+    missionChallenge
+}: {
+    missionChallenge: MemberMission
+}) => {
     return {
         status: missionChallenge.status,
     };
 };
 
 // 가게 리뷰 불러오기
-export const responseFromReviews = (reviews) => {
+export const responseFromReviews = ({
+    reviews
+}: {
+    reviews: Review[]
+}) => {
     return {
         data: reviews,
         pagination: {
@@ -86,7 +111,11 @@ export const responseFromReviews = (reviews) => {
 };
 
 // 가게 미션 불러오기
-export const responseFromMissions = (missions) => {
+export const responseFromMissions = ({
+    missions
+}: {
+    missions: Mission[]
+}) => {
     return {
         data: missions,
         pagination: {
