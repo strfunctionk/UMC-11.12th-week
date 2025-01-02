@@ -49,9 +49,7 @@ const port = process.env.PORT;
 
 
 app.use(cors(
-    // {
-    //     origin: ['http://localhost:3000', 'http://example.com']
-    // }
+    origin: ["*"]
 ));
 app.use(express.static("public"));
 app.use(express.json());
@@ -89,6 +87,10 @@ app.use((req, res, next) => {
     };
     next();
 });
+
+app.get("/docs", (req, res) => {
+    res.send("<script>alert(1)</script>");
+})
 
 app.use(
     "/docs",
