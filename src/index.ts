@@ -153,7 +153,7 @@ app.get(
 
 app.get("/", (req, res) => {
     console.log("Hello World", req.user);
-    res.send(req.user);
+    req.user ? res.send(req.user) : res.send("로그인 해주시길 바랍니다");
 });
 
 //app.post("/api/v1/users/signup", handleUserSignUp);
