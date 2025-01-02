@@ -31,16 +31,7 @@ import {
 } from "./auth.config.js";
 import { prisma } from "./db.config.js";
 
-const obj: { value: BigInt } = {
-    value: BigInt(1234567890123456789)
-};
-
-const jsonString = JSON.stringify(obj, (key, value) => {
-    if (typeof value === 'bigint') {
-        return value.toString();
-    }
-    return value;
-});
+BigInt.prototype.toJSON = function () { return this.toString() };
 
 dotenv.config();
 
