@@ -49,7 +49,9 @@ const port = process.env.PORT;
 
 
 app.use(cors(
-    origin: ["*"]
+    // {
+    //     origin: ['http://localhost:3000', 'http://example.com']
+    // }
 ));
 app.use(express.static("public"));
 app.use(express.json());
@@ -87,10 +89,6 @@ app.use((req, res, next) => {
     };
     next();
 });
-
-app.get("/docs", (req, res) => {
-    res.send("<script>alert(1)</script>");
-})
 
 app.use(
     "/docs",
@@ -155,7 +153,7 @@ app.get(
 
 app.get("/", (req, res) => {
     console.log("Hello World", req.user);
-    req.user ? res.send(req.user) : res.send("로그인 해주시길 바랍니다");
+    res.send(req.user);
 });
 
 //app.post("/api/v1/users/signup", handleUserSignUp);
