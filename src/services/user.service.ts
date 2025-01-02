@@ -1,8 +1,10 @@
+import { Member } from "@prisma/client";
 import {
     responseFromUser,
     responseFromUserAgree,
     responseFromReviews,
     responseFromMissions,
+    responseFromMissionComplete
 } from "../dtos/user.dto.js";;
 import {
     DuplicateUserEmailError,
@@ -25,8 +27,8 @@ import {
 } from "../repositories/user.repository.js";
 
 // 유저 회원가입
-export const userSignUp = async (data) => {
-    const joinUserId = await addUser({
+export const userSignUp = async (data: any) => {
+    const joinUserId: any = await addUser({
         name: data.name,
         gender: data.gender,
         age: data.age,
@@ -60,7 +62,7 @@ export const userSignUp = async (data) => {
 };
 
 // 유저 약관 동의
-export const userAgreeAddition = async (data) => {
+export const userAgreeAddition = async (data: any) => {
 
     for (const condition of data.terms) {
         const userAgree = await setUserAgree(data.user, condition);
@@ -77,10 +79,10 @@ export const userAgreeAddition = async (data) => {
 };
 
 // 내가 작성한 리뷰 목록 불러오기
-export const listUserReviews = async (memberId, cursor) => {
-    const reviews = await getAllUserReviews(memberId, cursor);
+export const listUserReviews = async (member: any, cursor: number) => {
+    const reviews: any = await getAllUserReviews(member.id, cursor);
     if (reviews.idError === true) {
-        throw new NotExistId("내가 작성한 리뷰에 대한 정보를 불러올 수 없습니다.", memberId);
+        throw new NotExistId("내가 작성한 리뷰에 대한 정보를 불러올 수 없습니다.", member.id);
     }
     else if (reviews.exceedCursor === true) {
         throw new ExceededCursorValue("커서 값이 초과되었습니다.", cursor);
@@ -89,10 +91,10 @@ export const listUserReviews = async (memberId, cursor) => {
 };
 
 // 내가 진행 중인 미션 목록 불러오기
-export const listUserMissions = async (memberId, status, cursor) => {
-    const missions = await getAllUserMissions(memberId, status, cursor);
+export const listUserMissions = async (member: any, status: string, cursor: number) => {
+    const missions: any = await getAllUserMissions(member.id, status, cursor);
     if (missions.idError === true) {
-        throw new NotExistId(`내가 ${status}인 미션에 대한 정보를 불러올 수 없습니다.`, memberId);
+        throw new NotExistId(`내가 ${status}인 미션에 대한 정보를 불러올 수 없습니다.`, member.id);
     }
     else if (missions.exceedCursor === true) {
         throw new ExceededCursorValue("커서 값이 초과되었습니다.", cursor);
@@ -101,8 +103,8 @@ export const listUserMissions = async (memberId, status, cursor) => {
 };
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기
-export const CompleteUserMission = async (data, memberId, missionId) => {
-    const memberMissionId = await getMemberMissionId(memberId, missionId, data.status)
+export const CompleteUserMission = async (data: any, member: any, missionId: number) => {
+    const memberMissionId: any = await getMemberMissionId(member.id, missionId, data.status)
     if (memberMissionId.statusError === true) {
         throw new DuplicateMissionError("요청한 상태가 이미 되어있는 미션입니다.", data);
     }
@@ -110,12 +112,13 @@ export const CompleteUserMission = async (data, memberId, missionId) => {
         throw new NotExistId("멤버 미션을 찾을 수 없습니다.", data);
     }
     const missionComplete = await patchUserMissionComplete(data.status, memberMissionId);
-    return responseFromMissions({
+    return responseFromMissionComplete({
         missionComplete
     });
 };
 
-export const userSocialSignUp = async (data) => {
+// 소셯 로그인 추가
+export const userSocialSignUp = async (data: any) => {
     await patchSocialUser(data);
 
     for (const preference of data.preferences) {

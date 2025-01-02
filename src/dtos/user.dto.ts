@@ -1,5 +1,6 @@
+import { Category, Member, MemberAgree, MemberMission, MemberPrefer, Mission, Region, Review, ReviewImage, Terms } from "@prisma/client";
 // 유저 회원 가입
-export const bodyToUser = (body) => {
+export const bodyToUser = (body: any) => {
 
     return {
         name: body.name,
@@ -15,7 +16,13 @@ export const bodyToUser = (body) => {
     };
 };
 
-export const responseFromUser = ({ user, preferences }) => {
+export const responseFromUser = ({
+    user,
+    preferences
+}: {
+    user: Member;
+    preferences: (MemberPrefer & { category: Category })[];
+}) => {
     const preferFoods = preferences.map(
         (preference) => preference.category.name
     );
@@ -27,7 +34,7 @@ export const responseFromUser = ({ user, preferences }) => {
 };
 
 // 유저 약관 동의
-export const bodyToUserAgree = (user, body) => {
+export const bodyToUserAgree = (user: any, body: any) => {
 
     return {
         user: user,
@@ -35,7 +42,11 @@ export const bodyToUserAgree = (user, body) => {
     };
 };
 
-export const responseFromUserAgree = ({ userAgree }) => {
+export const responseFromUserAgree = ({
+    userAgree
+}: {
+    userAgree: MemberAgree;
+}) => {
     return {
         memberId: userAgree.memberId,
         termsId: userAgree.termsId
@@ -43,7 +54,11 @@ export const responseFromUserAgree = ({ userAgree }) => {
 };
 
 // 내가 작성한 리뷰 목록 불러오기
-export const responseFromReviews = (reviews) => {
+export const responseFromReviews = ({
+    reviews
+}: {
+    reviews: Review[]
+}) => {
     return {
         data: reviews,
         pagination: {
@@ -53,7 +68,11 @@ export const responseFromReviews = (reviews) => {
 };
 
 // 내가 진행 중인 미션 목록 불러오기
-export const responseFromMissions = (missions) => {
+export const responseFromMissions = ({
+    missions
+}: {
+    missions: Mission[]
+}) => {
     return {
         data: missions,
         pagination: {
@@ -63,19 +82,24 @@ export const responseFromMissions = (missions) => {
 };
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기
-export const bodyToMissionComplete = (body) => {
+export const bodyToMissionComplete = (body: any) => {
 
     return {
         status: body.status,
     };
 };
-export const responseFromMissionComplete = (missionComplete) => {
+export const responseFromMissionComplete = ({
+    missionComplete
+}: {
+    missionComplete: MemberMission
+}) => {
     return {
         data: missionComplete,
     };
 };
 
-export const bodyToSocial = (user, body) => {
+// 소셜 로그인 추가
+export const bodyToSocial = (user: any, body: any) => {
     return {
         id: user.id || body.id,
         name: user.name || body.name,

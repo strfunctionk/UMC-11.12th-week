@@ -2,7 +2,7 @@ import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 import cors from "cors";
 import dotenv from "dotenv";
-import express from "express";
+import express, { Request, Response, Express, NextFunction } from "express";
 import {
     handleUserSignUp,
     handleUserAgreeAddition,
@@ -31,10 +31,6 @@ import {
 } from "./auth.config.js";
 import { prisma } from "./db.config.js";
 
-BigInt.prototype.toJSON = function () { // bigint 호환
-    const int = Number.parseInt(this.toString());
-    return int ?? this.toString();
-};
 
 dotenv.config();
 
@@ -42,7 +38,9 @@ passport.use(googleStrategy);
 passport.use(naverStrategy);
 passport.use(kakaoStrategy);
 passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+passport.deserializeUser<{ id: string; email: string; name: string }>(
+    (user, done) => done(null, user)
+);
 
 const app = express();
 const port = process.env.PORT;
@@ -109,7 +107,7 @@ app.get("/openapi.json", async (req, res, next) => {
         writeOutputFile: false,
     };
     const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
-    const routes = ["./src/index.js"];
+    const routes = ["./src/index.ts"];
     const doc = {
         info: {
             title: "UMC 7th",
@@ -132,7 +130,7 @@ app.get(
     (req, res) => res.redirect("/")
 );
 
-app.get("/oauth2/login/naver", passport.authenticate('naver', { authType: 'reprompt' }));
+app.get("/oauth2/login/naver", passport.authenticate('naver'));
 app.get(
     "/oauth2/callback/naver",
     passport.authenticate("naver", {
@@ -142,7 +140,7 @@ app.get(
     (req, res) => res.redirect("/")
 );
 
-app.get("/oauth2/login/kakao", passport.authenticate('kakao', { authType: 'reprompt' }));
+app.get("/oauth2/login/kakao", passport.authenticate('kakao'));
 app.get(
     "/oauth2/callback/kakao",
     passport.authenticate("kakao", {
@@ -176,7 +174,7 @@ app.patch("/api/v1/users/missions/:missionId/complete", handleUserMissionComplet
 
 
 
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (res.headersSent) {
         return next(err);
     }

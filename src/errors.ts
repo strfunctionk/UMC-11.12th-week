@@ -1,7 +1,8 @@
 export class NotExistId extends Error {
     errorCode = "U001";
-
-    constructor(reason, data) {
+    reason: string;
+    data: string;
+    constructor(reason: string, data: any) {
         super(reason);
         this.reason = reason;
         this.data = data;
@@ -10,8 +11,9 @@ export class NotExistId extends Error {
 
 export class ExceededCursorValue extends Error {
     errorCode = "U002";
-
-    constructor(reason, data) {
+    reason: string;
+    data: string;
+    constructor(reason: string, data: any) {
         super(reason);
         this.reason = reason;
         this.data = data;
@@ -20,8 +22,9 @@ export class ExceededCursorValue extends Error {
 
 export class DuplicateUserEmailError extends Error {
     errorCode = "U003";
-
-    constructor(reason, data) {
+    reason: string;
+    data: string;
+    constructor(reason: string, data: any) {
         super(reason);
         this.reason = reason;
         this.data = data;
@@ -30,8 +33,9 @@ export class DuplicateUserEmailError extends Error {
 
 export class AlreadyChallengingError extends Error {
     errorCode = "U004";
-
-    constructor(reason, data) {
+    reason: string;
+    data: string;
+    constructor(reason: string, data: any) {
         super(reason);
         this.reason = reason;
         this.data = data;
@@ -40,8 +44,9 @@ export class AlreadyChallengingError extends Error {
 
 export class DuplicateMissionError extends Error {
     errorCode = "U005";
-
-    constructor(reason, data) {
+    reason: string;
+    data: string;
+    constructor(reason: string, data: any) {
         super(reason);
         this.reason = reason;
         this.data = data;
@@ -50,8 +55,9 @@ export class DuplicateMissionError extends Error {
 
 export class NotSocialError extends Error {
     errorCode = "U006";
-
-    constructor(reason, data) {
+    reason: string;
+    data: string;
+    constructor(reason: string, data: any) {
         super(reason);
         this.reason = reason;
         this.data = data;

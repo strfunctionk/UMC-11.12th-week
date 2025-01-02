@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { Strategy as NaverStrategy } from "passport-naver-v2"
+import { Strategy as NaverStrategy } from "passport-naver";
 import { Strategy as KakaoStrategy } from "passport-kakao";
 import { prisma } from "./db.config.js";
 
@@ -21,7 +21,7 @@ export const googleStrategy = new GoogleStrategy(
     }
 );
 
-const googleVerify = async (profile) => {
+const googleVerify = async (profile: any) => {
     const email = profile.emails?.[0]?.value;
     if (!email) {
         throw new Error(`profile.email was not found: ${profile}`);
@@ -63,7 +63,7 @@ export const naverStrategy = new NaverStrategy(
     }
 );
 
-const naverVerify = async (profile) => {
+const naverVerify = async (profile: any) => {
     const email = profile.email;
     const gender = (profile.gender === "M") ? 'Male' : 'Female';
     const age = new Date().getFullYear() - profile.birthYear;
@@ -107,7 +107,7 @@ export const kakaoStrategy = new KakaoStrategy(
     }
 );
 
-const kakaoVerify = async (profile) => {
+const kakaoVerify = async (profile: any) => {
     const email = profile._json.kakao_account.email;
     if (!email) {
         throw new Error(`profile.email was not found: ${profile}`);

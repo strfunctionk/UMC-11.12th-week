@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import {
   bodyToStore,
@@ -16,7 +17,11 @@ import {
 import { NotSocialError } from "../errors.js";
 
 // 가게 추가
-export const handleStoreAddition = async (req, res, next) => {
+export const handleStoreAddition = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
  #swagger.summary = '가게 추가 API';
  #swagger.requestBody = {
@@ -101,7 +106,11 @@ export const handleStoreAddition = async (req, res, next) => {
 };
 
 //가게 리뷰 추가
-export const handleStoreReviewAddition = async (req, res, next) => {
+export const handleStoreReviewAddition = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '가게 리뷰 추가 API';
  #swagger.requestBody = {
@@ -210,7 +219,11 @@ content: {
 };
 
 // 가게 미션 추가
-export const handleStoreMissionAddition = async (req, res, next) => {
+export const handleStoreMissionAddition = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '가게 미션 추가 API';
 #swagger.requestBody = {
@@ -294,7 +307,11 @@ content: {
 };
 
 // 가게 미션 도전 중인 미션에 추가
-export const handleStoreMissionChallengeAddition = async (req, res, next) => {
+export const handleStoreMissionChallengeAddition = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '가게 미션 도전 중인 미션에 추가 API';
 #swagger.requestBody = {
@@ -421,7 +438,11 @@ properties: {
 };
 
 //가게 리뷰 불러오기
-export const handleListStoreReviews = async (req, res, next) => {
+export const handleListStoreReviews = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '상점 리뷰 목록 조회 API';
 #swagger.responses[200] = {
@@ -516,7 +537,11 @@ export const handleListStoreReviews = async (req, res, next) => {
 };
 
 //가게 미션 불러오기
-export const handleListStoreMissions = async (req, res, next) => {
+export const handleListStoreMissions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /*
 #swagger.summary = '가게 미션 불러오기 API';
 #swagger.responses[200] = {
