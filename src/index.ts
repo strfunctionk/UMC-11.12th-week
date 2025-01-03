@@ -2,6 +2,10 @@ import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 import cors from "cors";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
+import HTTPS from "https";
+
 import express, { Request, Response, Express, NextFunction } from "express";
 import {
     handleUserSignUp,
@@ -187,6 +191,15 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+// app.listen(port, () => {
+//     console.log(`Example app listening on port ${port}`);
+// });
+const option = {
+    ca: fs.readFileSync('./pem/fullchain.pem'),
+    key: fs.readFileSync(path.resolve(process.cwd(), './pem/privkey.pem'), 'utf8').toString(),
+    cert: fs.readFileSync(path.resolve(process.cwd(), './pem/cert.pem'), 'utf8').toString(),
+};
+
+HTTPS.createServer(option, app).listen(port, () => {
+    console.log(`[HTTPS] Server is runnig on port ${port}`);
 });
